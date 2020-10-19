@@ -13,12 +13,10 @@ class Categories extends StatelessWidget {
     List<Widget> _getLists(int order) {
       List<Widget> _flags = <Widget>[];
       for (String assetName in ListsAndFunctions.lists[order]) {
-        //var replaced = assetName.replaceAll("[ãéíô'Åç]", "_");
         _flags.add(
           SvgPicture.asset(
-            'images/$assetName.svg' /*'images/$replaced.svg'*/,
+            'images/$assetName.svg',
           ),
-          // PlatformSvg.asset('images/$assetName.svg'),
         );
       }
       return _flags;

@@ -2,14 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:mimi_flags/categories.dart';
 import 'lists_and_functions.dart';
-/*import 'package:flutter/foundation.dart' show kIsWeb;*/
+import 'package:flutter/foundation.dart' show kIsWeb;
 
 void main() {
-/*  if (kIsWeb) {
-    print("running on the web");
-  } else {
-    print("NOT running on the web");
-  }*/
   runApp(
     MyApp(),
   );
@@ -37,17 +32,15 @@ class _MainState extends State<Main> {
   void initState() {
     super.initState();
     for (String assetName in ListsAndFunctions.assetNames) {
-      _flags.add(SvgPicture.asset(
-        'images/$assetName.svg',
-      )
-          /*kIsWeb
-            ? SvgPicture.asset(
-                'images/$assetName.svg',
+      _flags.add(
+        kIsWeb
+            ? Image.network(
+                "https://flagcdn.com/w160/ax.webp",
               )
-            : SvgPicture.network(
+            : SvgPicture.asset(
                 'images/$assetName.svg',
-              ),*/
-          );
+              ),
+      );
     }
   }
 
@@ -87,20 +80,27 @@ class _MainState extends State<Main> {
       ),
       itemBuilder: (context, index) {
         return Padding(
-          padding: EdgeInsets.all(8.0),
+          padding: EdgeInsets.all(
+            8.0,
+          ),
           child: Container(
             decoration: BoxDecoration(
-              color: ListsAndFunctions.getColor(index),
-              borderRadius: BorderRadius.circular(8),
+              color: ListsAndFunctions.getColor(
+                index,
+              ),
+              borderRadius: BorderRadius.circular(
+                16,
+              ),
             ),
-            child: //_flags[index],
-                GestureDetector(
+            child: GestureDetector(
               child: _flags[index],
               onTap: () {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => Categories(index),
+                    builder: (context) => Categories(
+                      index,
+                    ),
                   ),
                 );
               },
