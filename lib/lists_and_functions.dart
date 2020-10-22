@@ -1,6 +1,206 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package:mimi_flags/categories.dart';
+import 'package:mimi_flags/photo_detail.dart';
 
 class ListsAndFunctions {
+  static fillTheList(
+    List<Widget> fillThisList,
+    List<String> usingThisList,
+    String cameFor,
+  ) {
+    for (String assetName in usingThisList) {
+      print(assetName);
+      print(ListsAndFunctions.codesOfCountries[assetName]);
+      fillThisList.add(kIsWeb
+          ? (cameFor == 'Categories'
+              ? Image.network(
+                  "https://raw.githubusercontent.com/makriyal/mimi_flags/master/images/$assetName.png",
+                )
+              : (assetName == "Kurdistan Region"
+                  ? Image.network(
+                      "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d2/Flag_of_Kurdistan.png/1024px-Flag_of_Kurdistan.png",
+                    )
+                  : (assetName == "Turkish Republic of Northern Cyprus"
+                      ? Image.network(
+                          "https://upload.wikimedia.org/wikipedia/commons/thumb/1/1e/Flag_of_the_Turkish_Republic_of_Northern_Cyprus.svg/1024px-Flag_of_the_Turkish_Republic_of_Northern_Cyprus.svg.png",
+                        )
+                      : Image.network(
+                          "https://flagcdn.com/w1280/${ListsAndFunctions.codesOfCountries[assetName].toLowerCase()}.webp",
+                        ))))
+          : SvgPicture.asset(
+              'images/$assetName.svg',
+            ));
+    }
+  }
+
+  static LayoutBuilder layoutBuilder(
+    int itemCount,
+    List<Widget> listToFill,
+    String whereToGo,
+    int order,
+  ) {
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        if (constraints.maxWidth > 1200) {
+          return createGridView(
+            context,
+            6,
+            4,
+            itemCount,
+            listToFill,
+            whereToGo,
+            order,
+          );
+        } else if (constraints.maxWidth > 800) {
+          return createGridView(
+            context,
+            5,
+            3,
+            itemCount,
+            listToFill,
+            whereToGo,
+            order,
+          );
+        } else {
+          return createGridView(
+            context,
+            4,
+            2,
+            itemCount,
+            listToFill,
+            whereToGo,
+            order,
+          );
+        }
+      },
+    );
+  }
+
+  static Widget createGridView(
+    BuildContext context,
+    int landscape,
+    int portrait,
+    int itemCount,
+    List<Widget> listToFill,
+    String whereToGo,
+    int order,
+  ) {
+    return GridView.builder(
+      itemCount: itemCount,
+      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+        crossAxisCount:
+            MediaQuery.of(context).orientation == Orientation.landscape
+                ? landscape
+                : portrait,
+        /*childAspectRatio: 3 / 2,*/
+      ),
+      itemBuilder: (context, index) {
+        return GestureDetector(
+          child: Padding(
+            padding: EdgeInsets.all(16.0),
+            child: Container(
+              decoration: BoxDecoration(
+                color: whereToGo == 'Categories'
+                    ? ListsAndFunctions.getColor(
+                        index,
+                      )
+                    : Colors.blueGrey[50],
+                borderRadius: BorderRadius.circular(16),
+              ),
+              child: Padding(
+                  padding: EdgeInsets.all(
+                    whereToGo != 'Categories' ? 16 : 0,
+                  ),
+                  child: whereToGo != 'Categories'
+                      ? Column(
+                          mainAxisSize: MainAxisSize.max,
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: <Widget>[
+                            Expanded(
+                              flex: 3,
+                              child: AspectRatio(
+                                aspectRatio: 3.0 / 2.0,
+                                child: Hero(
+                                  tag: index.toString(),
+                                  child: listToFill[index],
+                                ),
+                              ),
+                            ),
+                            Expanded(
+                              flex: 2,
+                              child: Text(
+                                ListsAndFunctions.lists[order][index]
+                                    .replaceAll(
+                                        "Aland Islands", "Åland Islands")
+                                    .replaceAll("Curacao", "Curaçao")
+                                    .replaceAll("Cote d'Ivoire (Ivory Coast)",
+                                        "Côte d'Ivoire (Ivory Coast)")
+                                    .replaceAll("Reunion", "Réunion")
+                                    .replaceAll(
+                                        "Saint Barthelemy", "Saint Barthélemy")
+                                    .replaceAll("Sao Tome and Principe",
+                                        "São Tomé and Príncipe"),
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                  color: Colors.blueGrey,
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 17.0,
+                                ),
+                              ),
+                            )
+                          ],
+                        )
+                      : listToFill[index]),
+            ),
+          ),
+          onTap: () {
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => whereToGo == 'Details'
+                        ? PhotoDetail(
+                            Hero(
+                              tag: index.toString(),
+                              child: listToFill[index],
+                            ),
+                          )
+                        : (Categories(
+                            index,
+                          ))));
+          },
+        );
+
+/*          Padding(
+          padding: EdgeInsets.all(
+            8.0,
+          ),
+          child: Container(
+            decoration: BoxDecoration(
+              color: ListsAndFunctions.getColor(
+                index,
+              ),
+              borderRadius: BorderRadius.circular(
+                16,
+              ),
+            ),
+            child: GestureDetector(
+              child: listToFill[index] */ /*_flags[index]*/ /*,
+              onTap: () {
+                */ /*Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => pageToGo
+                      ),
+                );*/ /*
+              },
+            ),
+          ),
+        );*/
+      },
+    );
+  }
+
   static Color getColor(int order) {
     Color color;
     int remain = order % 7;
@@ -512,24 +712,15 @@ class ListsAndFunctions {
   ];
   static List<String> two_horizontal_stripes = [
     "Angola",
-    "Belarus",
-    "Benin",
     "Burkina Faso",
-    "Chile",
-    "Czechia",
-    "Djibouti",
     "Greenland",
-    "Guinea-Bissau",
     "Haiti",
     "Indonesia",
     "Liechtenstein",
-    "Madagascar",
     "Monaco",
-    "Philippines",
     "Poland",
     "San Marino",
     "Singapore",
-    "Sint Maarten",
     "Ukraine",
     "Wales"
   ];
@@ -538,16 +729,11 @@ class ListsAndFunctions {
     "Armenia",
     "Austria",
     "Azerbaijan",
-    "Bahamas",
     "Bolivia",
     "Bulgaria",
-    "Cambodia",
-    "Colombia",
     "Croatia",
-    "Ecuador",
     "Egypt",
     "El Salvador",
-    "Equatorial Guinea",
     "Estonia",
     "Ethiopia",
     "French Polynesia",
@@ -559,11 +745,7 @@ class ListsAndFunctions {
     "India",
     "Iran",
     "Iraq",
-    "Jordan",
-    "Kuwait",
-    "Laos",
-    "Latvia",
-    "Lebanon",
+    "Kurdistan Region",
     "Lesotho",
     "Libya",
     "Lithuania",
@@ -574,25 +756,16 @@ class ListsAndFunctions {
     "New Caledonia",
     "Niger",
     "Nicaragua",
-    "Oman",
-    "Palestine",
     "Paraguay",
     "Russia",
-    "Rwanda",
-    "Sao Tome and Principe",
     "Serbia",
     "Sierra Leone",
     "Slovakia",
     "Slovenia",
-    "Spain",
-    "Sudan",
     "Syria",
     "Tajikistan",
-    "United Arab Emirates",
     "Venezuela",
     "Yemen",
-    "Western Sahara",
-    "Kurdistan Region"
   ];
   static List<String> three_vertical_stripes = [
     "Afghanistan",
@@ -882,4 +1055,263 @@ class ListsAndFunctions {
     many_horizontal_stripes,
     two_stars,
   ];
+
+  static Map<String, String> codesOfCountries = {
+    'Afghanistan': 'AF',
+    'Aland Islands': 'AX',
+    'Albania': 'AL',
+    'Algeria': 'DZ',
+    'American Samoa': 'AS',
+    'Andorra': 'AD',
+    'Angola': 'AO',
+    'Anguilla': 'AI',
+    'Antarctica': 'AQ',
+    'Antigua and Barbuda': 'AG',
+    'Argentina': 'AR',
+    'Armenia': 'AM',
+    'Aruba': 'AW',
+    'Australia': 'AU',
+    'Austria': 'AT',
+    'Azerbaijan': 'AZ',
+    'Bahamas': 'BS',
+    'Bahrain': 'BH',
+    'Bangladesh': 'BD',
+    'Barbados': 'BB',
+    'Belarus': 'BY',
+    'Belgium': 'BE',
+    'Belize': 'BZ',
+    'Benin': 'BJ',
+    'Bermuda': 'BM',
+    'Bhutan': 'BT',
+    'Bolivia': 'BO',
+    'Bosnia and Herzegovina': 'BA',
+    'Botswana': 'BW',
+    'Bouvet Island': 'BV',
+    'Brazil': 'BR',
+    'British Indian Ocean Territory': 'IO',
+    'Brunei': 'BN',
+    'Bulgaria': 'BG',
+    'Burkina Faso': 'BF',
+    'Burundi': 'BI',
+    'Cambodia': 'KH',
+    'Cameroon': 'CM',
+    'Canada': 'CA',
+    'Cape Verde': 'CV',
+    'Caribbean Netherlands': 'BQ',
+    'Cayman Islands': 'KY',
+    'Central African Republic': 'CF',
+    'Chad': 'TD',
+    'Chile': 'CL',
+    'China': 'CN',
+    'Christmas Island': 'CX',
+    'Cocos Islands': 'CC',
+    'Colombia': 'CO',
+    'Comoros': 'KM',
+    'Republic of the Congo': 'CG',
+    'DR Congo': 'CD',
+    'Cook Islands': 'CK',
+    'Costa Rica': 'CR',
+    'Cote d\'Ivoire (Ivory Coast)': 'CI',
+    'Croatia': 'HR',
+    'Cuba': 'CU',
+    'Curacao': 'CW',
+    'Cyprus': 'CY',
+    'Czechia': 'CZ',
+    'Denmark': 'DK',
+    'Djibouti': 'DJ',
+    'Dominica': 'DM',
+    'Dominican Republic': 'DO',
+    'Ecuador': 'EC',
+    'Egypt': 'EG',
+    'El Salvador': 'SV',
+    'England': 'GB-ENG',
+    'Equatorial Guinea': 'GQ',
+    'Eritrea': 'ER',
+    'Estonia': 'EE',
+    'Eswatini': 'SZ',
+    'Ethiopia': 'ET',
+    'Falkland Islands': 'FK',
+    'Faroe Islands': 'FO',
+    'Fiji': 'FJ',
+    'Finland': 'FI',
+    'France': 'FR',
+    'French Guiana': 'GF',
+    'French Polynesia': 'PF',
+    'French Southern and Antarctic Lands': 'TF',
+    'Gabon': 'GA',
+    'Gambia': 'GM',
+    'Georgia': 'GE',
+    'Germany': 'DE',
+    'Ghana': 'GH',
+    'Gibraltar': 'GI',
+    'Greece': 'GR',
+    'Greenland': 'GL',
+    'Grenada': 'GD',
+    'Guadeloupe': 'GP',
+    'Guam': 'GU',
+    'Guatemala': 'GT',
+    'Guernsey': 'GG',
+    'Guinea': 'GN',
+    'Guinea-Bissau': 'GW',
+    'Guyana': 'GY',
+    'Haiti': 'HT',
+    'Heard Island and McDonald Islands': 'HM',
+    'Honduras': 'HN',
+    'Hong Kong': 'HK',
+    'Hungary': 'HU',
+    'Iceland': 'IS',
+    'India': 'IN',
+    'Indonesia': 'ID',
+    'Iran': 'IR',
+    'Iraq': 'IQ',
+    'Ireland': 'IE',
+    'Isle of Man': 'IM',
+    'Israel': 'IL',
+    'Italy': 'IT',
+    'Jamaica': 'JM',
+    'Japan': 'JP',
+    'Jersey': 'JE',
+    'Jordan': 'JO',
+    'Kazakhstan': 'KZ',
+    'Kenya': 'KE',
+    'Kiribati': 'KI',
+    'North Korea': 'KP',
+    'South Korea': 'KR',
+    'Kosovo': 'XK',
+    'Kuwait': 'KW',
+    "Kurdistan Region": "",
+    'Kyrgyzstan': 'KG',
+    'Laos': 'LA',
+    'Latvia': 'LV',
+    'Lebanon': 'LB',
+    'Lesotho': 'LS',
+    'Liberia': 'LR',
+    'Libya': 'LY',
+    'Liechtenstein': 'LI',
+    'Lithuania': 'LT',
+    'Luxembourg': 'LU',
+    'Macau': 'MO',
+    'Madagascar': 'MG',
+    'Malawi': 'MW',
+    'Malaysia': 'MY',
+    'Maldives': 'MV',
+    'Mali': 'ML',
+    'Malta': 'MT',
+    'Marshall Islands': 'MH',
+    'Martinique': 'MQ',
+    'Mauritania': 'MR',
+    'Mauritius': 'MU',
+    'Mayotte': 'YT',
+    'Mexico': 'MX',
+    'Micronesia': 'FM',
+    'Moldova': 'MD',
+    'Monaco': 'MC',
+    'Mongolia': 'MN',
+    'Montenegro': 'ME',
+    'Montserrat': 'MS',
+    'Morocco': 'MA',
+    'Mozambique': 'MZ',
+    'Myanmar': 'MM',
+    'Namibia': 'NA',
+    'Nauru': 'NR',
+    'Nepal': 'NP',
+    'Netherlands': 'NL',
+    'New Caledonia': 'NC',
+    'New Zealand': 'NZ',
+    'Nicaragua': 'NI',
+    'Niger': 'NE',
+    'Nigeria': 'NG',
+    'Niue': 'NU',
+    'Norfolk Island': 'NF',
+    'North Macedonia': 'MK',
+    'Northern Ireland': 'GB-NIR',
+    'Northern Mariana Islands': 'MP',
+    'Norway': 'NO',
+    'Oman': 'OM',
+    'Pakistan': 'PK',
+    'Palau': 'PW',
+    'Palestine': 'PS',
+    'Panama': 'PA',
+    'Papua New Guinea': 'PG',
+    'Paraguay': 'PY',
+    'Peru': 'PE',
+    'Philippines': 'PH',
+    'Pitcairn Islands': 'PN',
+    'Poland': 'PL',
+    'Portugal': 'PT',
+    'Puerto Rico': 'PR',
+    'Qatar': 'QA',
+    'Reunion': 'RE',
+    'Romania': 'RO',
+    'Russia': 'RU',
+    'Rwanda': 'RW',
+    'Saint Barthelemy': 'BL',
+    'Saint Helena, Ascension and Tristan da Cunha': 'SH',
+    'Saint Kitts and Nevis': 'KN',
+    'Saint Lucia': 'LC',
+    'Saint Martin': 'MF',
+    'Saint Pierre and Miquelon': 'PM',
+    'Saint Vincent and the Grenadines': 'VC',
+    'Samoa': 'WS',
+    'San Marino': 'SM',
+    'Sao Tome and Principe': 'ST',
+    'Saudi Arabia': 'SA',
+    'Scotland': 'GB-SCT',
+    'Senegal': 'SN',
+    'Serbia': 'RS',
+    'Seychelles': 'SC',
+    'Sierra Leone': 'SL',
+    'Singapore': 'SG',
+    'Sint Maarten': 'SX',
+    'Slovakia': 'SK',
+    'Slovenia': 'SI',
+    'Solomon Islands': 'SB',
+    'Somalia': 'SO',
+    'South Africa': 'ZA',
+    'South Georgia': 'GS',
+    'South Sudan': 'SS',
+    'Spain': 'ES',
+    'Sri Lanka': 'LK',
+    'Sudan': 'SD',
+    'Suriname': 'SR',
+    'Svalbard and Jan Mayen': 'SJ',
+    'Sweden': 'SE',
+    'Switzerland': 'CH',
+    'Syria': 'SY',
+    'Taiwan': 'TW',
+    'Tajikistan': 'TJ',
+    'Tanzania': 'TZ',
+    'Thailand': 'TH',
+    'Timor-Leste': 'TL',
+    'Togo': 'TG',
+    'Tokelau': 'TK',
+    'Tonga': 'TO',
+    'Trinidad and Tobago': 'TT',
+    'Tunisia': 'TN',
+    'Turkey': 'TR',
+    'Turkish Republic of Northern Cyprus': '',
+    'Turkmenistan': 'TM',
+    'Turks and Caicos Islands': 'TC',
+    'Tuvalu': 'TV',
+    'Uganda': 'UG',
+    'Ukraine': 'UA',
+    'United Arab Emirates': 'AE',
+    'United Kingdom': 'GB',
+    'United States': 'US',
+    'United States Minor Outlying Islands': 'UM',
+    'Uruguay': 'UY',
+    'Uzbekistan': 'UZ',
+    'Vanuatu': 'VU',
+    'Vatican City': 'VA',
+    'Venezuela': 'VE',
+    'Vietnam': 'VN',
+    'British Virgin Islands': 'VG',
+    'United States Virgin Islands': 'VI',
+    'Wales': 'GB-WLS',
+    'Wallis and Futuna': 'WF',
+    'Western Sahara': 'EH',
+    'Yemen': 'YE',
+    'Zambia': 'ZM',
+    'Zimbabwe': 'ZW',
+  };
 }
