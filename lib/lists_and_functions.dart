@@ -157,46 +157,22 @@ class ListsAndFunctions {
           ),
           onTap: () {
             Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) => whereToGo == 'Details'
-                        ? PhotoDetail(
-                            Hero(
-                              tag: index.toString(),
-                              child: listToFill[index],
-                            ),
-                          )
-                        : (Categories(
-                            index,
-                          ))));
+              context,
+              MaterialPageRoute(
+                builder: (context) => whereToGo == 'Details'
+                    ? PhotoDetail(
+                        Hero(
+                          tag: index.toString(),
+                          child: listToFill[index],
+                        ),
+                      )
+                    : (Categories(
+                        index,
+                      )),
+              ),
+            );
           },
         );
-
-/*          Padding(
-          padding: EdgeInsets.all(
-            8.0,
-          ),
-          child: Container(
-            decoration: BoxDecoration(
-              color: ListsAndFunctions.getColor(
-                index,
-              ),
-              borderRadius: BorderRadius.circular(
-                16,
-              ),
-            ),
-            child: GestureDetector(
-              child: listToFill[index] */ /*_flags[index]*/ /*,
-              onTap: () {
-                */ /*Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => pageToGo
-                      ),
-                );*/ /*
-              },
-            ),
-          ),
-        );*/
       },
     );
   }
