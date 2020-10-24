@@ -87,93 +87,99 @@ class ListsAndFunctions {
     String whereToGo,
     int order,
   ) {
-    return GridView.builder(
-      itemCount: itemCount,
-      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount:
-            MediaQuery.of(context).orientation == Orientation.landscape
-                ? landscape
-                : portrait,
-        /*childAspectRatio: 3 / 2,*/
-      ),
-      itemBuilder: (context, index) {
-        return GestureDetector(
-          child: Padding(
-            padding: EdgeInsets.all(16.0),
-            child: Container(
-              decoration: BoxDecoration(
-                color: whereToGo == 'Categories'
-                    ? ListsAndFunctions.getColor(
-                        index,
-                      )
-                    : Colors.blueGrey[50],
-                borderRadius: BorderRadius.circular(16),
-              ),
-              child: Padding(
-                  padding: EdgeInsets.all(
-                    whereToGo != 'Categories' ? 16 : 0,
-                  ),
-                  child: whereToGo != 'Categories'
-                      ? Column(
-                          mainAxisSize: MainAxisSize.max,
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          children: <Widget>[
-                            Expanded(
-                              flex: 3,
-                              child: AspectRatio(
-                                aspectRatio: 3.0 / 2.0,
-                                child: Hero(
-                                  tag: index.toString(),
-                                  child: listToFill[index],
-                                ),
-                              ),
-                            ),
-                            Expanded(
-                              flex: 2,
-                              child: Text(
-                                ListsAndFunctions.lists[order][index]
-                                    .replaceAll(
-                                        "Aland Islands", "Åland Islands")
-                                    .replaceAll("Curacao", "Curaçao")
-                                    .replaceAll("Cote d'Ivoire (Ivory Coast)",
-                                        "Côte d'Ivoire (Ivory Coast)")
-                                    .replaceAll("Reunion", "Réunion")
-                                    .replaceAll(
-                                        "Saint Barthelemy", "Saint Barthélemy")
-                                    .replaceAll("Sao Tome and Principe",
-                                        "São Tomé and Príncipe"),
-                                textAlign: TextAlign.center,
-                                style: TextStyle(
-                                  color: Colors.blueGrey,
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 17.0,
-                                ),
-                              ),
-                            )
-                          ],
+    return Container(
+      color: Colors.white,
+      child: GridView.builder(
+        itemCount: itemCount,
+        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+          crossAxisCount:
+              MediaQuery.of(context).orientation == Orientation.landscape
+                  ? landscape
+                  : portrait,
+          /*childAspectRatio: 3 / 2,*/
+        ),
+        itemBuilder: (context, index) {
+          return GestureDetector(
+            child: Padding(
+              padding: EdgeInsets.all(16.0),
+              child: Container(
+                decoration: BoxDecoration(
+                  color: whereToGo == 'Categories'
+                      ? ListsAndFunctions.getColor(
+                          index,
                         )
-                      : listToFill[index]),
-            ),
-          ),
-          onTap: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => whereToGo == 'Details'
-                    ? PhotoDetail(
-                        Hero(
-                          tag: index.toString(),
-                          child: listToFill[index],
-                        ),
-                      )
-                    : (Categories(
-                        index,
-                      )),
+                      : Colors.blueGrey[50],
+                  borderRadius: BorderRadius.circular(16),
+                ),
+                child: Padding(
+                    padding: EdgeInsets.all(
+                      whereToGo != 'Categories' ? 4 : 0,
+                    ),
+                    child: whereToGo != 'Categories'
+                        ? Column(
+                            mainAxisSize: MainAxisSize.max,
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            children: <Widget>[
+                              Expanded(
+                                flex: 3,
+                                child: AspectRatio(
+                                  aspectRatio: 3.0 / 2.0,
+                                  child: Hero(
+                                    tag: index.toString(),
+                                    child: listToFill[index],
+                                  ),
+                                ),
+                              ),
+                              SizedBox(
+                                height: 20,
+                              ),
+                              Expanded(
+                                flex: 2,
+                                child: Text(
+                                  ListsAndFunctions.lists[order][index]
+                                      .replaceAll(
+                                          "Aland Islands", "Åland Islands")
+                                      .replaceAll("Curacao", "Curaçao")
+                                      .replaceAll("Cote d'Ivoire (Ivory Coast)",
+                                          "Côte d'Ivoire (Ivory Coast)")
+                                      .replaceAll("Reunion", "Réunion")
+                                      .replaceAll("Saint Barthelemy",
+                                          "Saint Barthélemy")
+                                      .replaceAll("Sao Tome and Principe",
+                                          "São Tomé and Príncipe"),
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                    color: Colors.blueGrey,
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 17.0,
+                                  ),
+                                ),
+                              )
+                            ],
+                          )
+                        : listToFill[index]),
               ),
-            );
-          },
-        );
-      },
+            ),
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => whereToGo == 'Details'
+                      ? PhotoDetail(
+                          Hero(
+                            tag: index.toString(),
+                            child: listToFill[index],
+                          ),
+                        )
+                      : (Categories(
+                          index,
+                        )),
+                ),
+              );
+            },
+          );
+        },
+      ),
     );
   }
 
@@ -204,16 +210,6 @@ class ListsAndFunctions {
         break;
     }
     return color;
-  }
-
-  static int calculateCrossAxisCount(BuildContext context) {
-    final smallestWidth = MediaQuery.of(context).size.shortestSide;
-    if (smallestWidth >= 1200.0)
-      return 8;
-    else if (smallestWidth >= 800.0)
-      return 4;
-    else
-      return 2;
   }
 
   static List<String> assetNames = <String>[
@@ -315,44 +311,7 @@ class ListsAndFunctions {
     'Flags With Many Horizontal Stripes',
     'Flags With Two Stars',
   ];
-//  static List<Color> colors = [
-//    Colors.red,
-//    Colors.orange,
-//    Colors.yellow,
-//    Colors.green,
-//    Colors.blue,
-//    Colors.indigo,
-//    Color(0xff8000FF),
-//    Colors.red,
-//    Colors.orange,
-//    Colors.yellow,
-//    Colors.green,
-//    Colors.blue,
-//    Colors.indigo,
-//    Color(0xff8000FF),
-//    Colors.red,
-//    Colors.orange,
-//    Colors.yellow,
-//    Colors.green,
-//    Colors.blue,
-//    Colors.indigo,
-//    Color(0xff8000FF),
-//    Colors.red,
-//    Colors.orange,
-//    Colors.yellow,
-//    Colors.green,
-//    Colors.blue,
-//    Colors.indigo,
-//    Color(0xff8000FF),
-//    Colors.red,
-//    Colors.orange,
-//    Colors.yellow,
-//    Colors.green,
-//    Colors.blue,
-//    Colors.indigo,
-//    Color(0xff8000FF),
-//    Colors.red,
-//  ];
+
   static List<String> circle = [
     "Bangladesh",
     "Belize",
@@ -641,7 +600,9 @@ class ListsAndFunctions {
     "Republic of the Congo",
     "DR Congo"
   ];
+
   static List<String> key = ["Gibraltar", "Vatican City"];
+
   static List<String> ship = [
     "Bermuda",
     "Belize",
@@ -652,6 +613,7 @@ class ListsAndFunctions {
     "Saint Helena, Ascension and Tristan da Cunha",
     "Saint Pierre and Miquelon"
   ];
+
   static List<String> border = [
     "Guam",
     "Grenada",
@@ -660,6 +622,7 @@ class ListsAndFunctions {
     "Nepal",
     "Sri Lanka"
   ];
+
   static List<String> saltire = [
     "Burundi",
     "Jamaica",
@@ -667,6 +630,7 @@ class ListsAndFunctions {
     "Scotland",
     "United Kingdom"
   ];
+
   static List<String> union_jack = [
     "Anguilla",
     "Australia",
@@ -686,6 +650,7 @@ class ListsAndFunctions {
     "South Georgia",
     "Turks and Caicos Islands"
   ];
+
   static List<String> two_horizontal_stripes = [
     "Angola",
     "Burkina Faso",
@@ -700,6 +665,7 @@ class ListsAndFunctions {
     "Ukraine",
     "Wales"
   ];
+
   static List<String> three_horizontal_stripes = [
     "Argentina",
     "Armenia",
@@ -743,6 +709,7 @@ class ListsAndFunctions {
     "Venezuela",
     "Yemen",
   ];
+
   static List<String> three_vertical_stripes = [
     "Afghanistan",
     "Andorra",
@@ -767,6 +734,7 @@ class ListsAndFunctions {
     "Saint Martin",
     "Senegal",
   ];
+
   static List<String> nordic_cross = [
     "Aland Islands",
     "Bouvet Island",
@@ -778,17 +746,20 @@ class ListsAndFunctions {
     "Svalbard and Jan Mayen",
     "Sweden"
   ];
+
   static List<String> two_vertical_stripes = [
     "Algeria",
     "Malta",
     "Portugal",
     "Vatican City"
   ];
+
   static List<String> horizontal_four_stripes = [
     "Central African Republic",
     "Comoros",
     "Mauritius"
   ];
+
   static List<String> upper_left_star = [
     "Aruba",
     "Central African Republic",
@@ -802,7 +773,9 @@ class ListsAndFunctions {
     "Panama",
     "Togo"
   ];
+
   static List<String> upper_left_sun = ["Namibia", "Taiwan", "Uruguay"];
+
   static List<String> lion = [
     "Bermuda",
     "Cayman Islands",
@@ -814,27 +787,33 @@ class ListsAndFunctions {
     "Spain",
     "Sri Lanka"
   ];
+
   static List<String> yin_and_yang = ["Mongolia", "South Korea"];
+
   static List<String> three_pieces = [
     "Benin",
     "Chile",
     "Guinea-Bissau",
     "Madagascar"
   ];
+
   static List<String> wave = [
     "British Indian Ocean Territory",
     "Kiribati",
     "Saint Pierre and Miquelon"
   ];
+
   static List<String> pale = [
     "Canada",
     "Norfolk Island",
     "Saint Vincent and the Grenadines"
   ];
+
   static List<String> hand = [
     "Brunei",
     "Northern Ireland",
   ];
+
   static List<String> sword = [
     "Angola",
     "Guatemala",
@@ -842,6 +821,7 @@ class ListsAndFunctions {
     "Saudi Arabia",
     "Sri Lanka",
   ];
+
   static List<String> crown = [
     "British Indian Ocean Territory",
     "Croatia",
@@ -856,6 +836,7 @@ class ListsAndFunctions {
     "Tajikistan",
     "Vatican City",
   ];
+
   static List<String> castle = [
     "Gibraltar",
     "Portugal",
@@ -863,15 +844,18 @@ class ListsAndFunctions {
     "San Marino",
     "Spain",
   ];
+
   static List<String> pall = ["Vanuatu", "South Africa"];
-  // ignore: non_constant_identifier_names
+
   static List<String> cressent_and_sun = ["Mongolia", "Nepal"];
+
   static List<String> pattern = [
     "Belarus",
     "Kazakhstan",
     "Saint Pierre and Miquelon",
     "Turkmenistan"
   ];
+
   static List<String> sun = [
     "Antigua and Barbuda",
     "Argentina",
@@ -897,6 +881,7 @@ class ListsAndFunctions {
     "Taiwan",
     "Uruguay"
   ];
+
   static List<String> canton = [
     "Chile",
     "Greece",
@@ -910,6 +895,7 @@ class ListsAndFunctions {
     "United States Minor Outlying Islands",
     "Uruguay"
   ];
+
   static List<String> symmetric_cross = [
     "Dominica",
     "Dominican Republic",
@@ -920,6 +906,7 @@ class ListsAndFunctions {
     "Northern Ireland",
     "United Kingdom"
   ];
+
   static List<String> stripes_on_up_and_bottom = [
     "Belize",
     "Israel",
@@ -927,6 +914,7 @@ class ListsAndFunctions {
     "North Korea",
     "Turkish Republic of Northern Cyprus",
   ];
+
   static List<String> horizontal_thin_stripe = [
     "Aruba",
     "Botswana",
@@ -935,6 +923,7 @@ class ListsAndFunctions {
     "Latvia",
     "Nauru",
   ];
+
   static List<String> horizontal_thick_stripe = [
     "Cambodia",
     "Costa Rica",
@@ -950,11 +939,13 @@ class ListsAndFunctions {
     "Tajikistan",
     "Thailand",
   ];
+
   static List<String> unequal_horizontal_three_stripes = [
     "Colombia",
     "Ecuador",
     "Rwanda"
   ];
+
   static List<String> southern_cross = [
     "Australia",
     "Christmas Island",
@@ -964,6 +955,7 @@ class ListsAndFunctions {
     "Papua New Guinea",
     "Samoa",
   ];
+
   static List<String> many_horizontal_stripes = [
     "Greece",
     "Liberia",
@@ -974,6 +966,7 @@ class ListsAndFunctions {
     "Uruguay",
     "Zimbabwe",
   ];
+
   static List<String> two_stars = [
     "Curacao",
     "Panama",

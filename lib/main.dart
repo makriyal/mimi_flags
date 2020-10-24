@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'lists_and_functions.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
+import 'package:google_fonts/google_fonts.dart';
 
 void main() {
   runApp(
@@ -13,6 +14,11 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: kIsWeb ? 'MiMi Researches Flags' : 'MiMi RF',
+      theme: ThemeData(
+        textTheme: GoogleFonts.comfortaaTextTheme(
+          Theme.of(context).textTheme,
+        ),
+      ),
       home: Main(),
     );
   }
